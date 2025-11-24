@@ -3,5 +3,5 @@ openai
 Pillow
 requests
 streamlit-drawable-canvas 
-opencv-python 
+opencv-python-headless
 numpy
