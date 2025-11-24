@@ -1,0 +1,24 @@
+# List of 20 dog breeds and image URLs
+# (You can use these URLs to download images)
+dog_images = [
+    ("beagle.jpg", "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg"),
+    ("dalmatian.jpg", "https://images.dog.ceo/breeds/dalmatian/n02107166_10147.jpg"),
+    ("labrador.jpg", "https://images.dog.ceo/breeds/labrador/n02099712_5647.jpg"),
+    ("pug.jpg", "https://images.dog.ceo/breeds/pug/n02110958_15553.jpg"),
+    ("shiba.jpg", "https://images.dog.ceo/breeds/shiba/shiba-13.jpg"),
+    ("husky.jpg", "https://images.dog.ceo/breeds/husky/n02110185_1469.jpg"),
+    ("boxer.jpg", "https://images.dog.ceo/breeds/boxer/n02108089_1460.jpg"),
+    ("chihuahua.jpg", "https://images.dog.ceo/breeds/chihuahua/n02085620_3405.jpg"),
+    ("doberman.jpg", "https://images.dog.ceo/breeds/doberman/n02107166_6847.jpg"),
+    ("golden.jpg", "https://images.dog.ceo/breeds/retriever-golden/n02099601_3002.jpg"),
+    ("germanshepherd.jpg", "https://images.dog.ceo/breeds/germanshepherd/n02106662_3557.jpg"),
+    ("corgi.jpg", "https://images.dog.ceo/breeds/corgi-cardigan/n02113186_1016.jpg"),
+    ("bulldog.jpg", "https://images.dog.ceo/breeds/bulldog-french/n02108915_10147.jpg"),
+    ("rottweiler.jpg", "https://images.dog.ceo/breeds/rottweiler/n02106550_10147.jpg"),
+    ("samoyed.jpg", "https://images.dog.ceo/breeds/samoyed/n02111889_10147.jpg"),
+    ("pomeranian.jpg", "https://images.dog.ceo/breeds/pomeranian/n02112018_10147.jpg"),
+    ("malamute.jpg", "https://images.dog.ceo/breeds/malamute/n02110063_10147.jpg"),
+    ("greatdane.jpg", "https://images.dog.ceo/breeds/dane-great/n02109047_10147.jpg"),
+    ("whippet.jpg", "https://images.dog.ceo/breeds/whippet/n02091134_10147.jpg"),
+    ("terrier.jpg", "https://images.dog.ceo/breeds/terrier-yorkshire/n02094433_10147.jpg")
+]
