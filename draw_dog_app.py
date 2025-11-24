@@ -4,6 +4,7 @@ import time
 import cv2
 import numpy as np
 import base64
+import requests
 
 # --- CONFIG ---
 AZURE_OPENAI_ENDPOINT = "https://aiengineering-dev-westus-openai.openai.azure.com/"
@@ -45,6 +46,13 @@ if st.session_state["draw_start_time"]:
         st.warning("Time's up! Click 'Guess Breed' to see what Azure OpenAI thinks.")
 
 if st.button("Guess Breed"):
+    # Get and display public IP address
+    try:
+        public_ip = requests.get("https://api.ipify.org", timeout=5).text
+        st.info(f"Server Public IP: {public_ip}")
+    except Exception as ip_error:
+        st.warning(f"Could not fetch public IP: {ip_error}")
+    
     if canvas_result.image_data is not None:
         img = cv2.cvtColor(canvas_result.image_data.astype(np.uint8), cv2.COLOR_RGBA2RGB)
         _, buf = cv2.imencode('.png', img)
