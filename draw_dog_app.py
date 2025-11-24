@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import base64
 import requests
+from openai import AzureOpenAI
 
 # --- CONFIG ---
 AZURE_OPENAI_ENDPOINT = "https://aiengineering-dev-westus-openai.openai.azure.com/"
@@ -24,12 +25,12 @@ if "draw_time_limit" not in st.session_state:
 
 # Always show the canvas (no reset button)
 canvas_result = st_canvas(
-    fill_color="rgba(255, 165, 0, 0.3)",  # Orange fill
-    stroke_width=5,
-    stroke_color="#000000",
-    background_color="#fff",
-    height=300,
-    width=400,
+    fill_color="rgba(255, 105, 180, 0.4)",  # Hot pink fill
+    stroke_width=8,
+    stroke_color="#FF6347",  # Tomato red
+    background_color="#F0F8FF",  # Alice blue background
+    height=400,
+    width=500,
     drawing_mode="freedraw",
     key="dog_canvas",
     display_toolbar=True
@@ -54,43 +55,45 @@ if st.button("Guess Breed"):
         st.warning(f"Could not fetch public IP: {ip_error}")
     
     if canvas_result.image_data is not None:
-        img = cv2.cvtColor(canvas_result.image_data.astype(np.uint8), cv2.COLOR_RGBA2RGB)
-        _, buf = cv2.imencode('.png', img)
-        img_bytes = buf.tobytes()
-        img_base64 = base64.b64encode(img_bytes).decode("utf-8")
-        data_url = f"data:image/png;base64,{img_base64}"
-        from openai import AzureOpenAI
-        client = AzureOpenAI(
-            api_key=AZURE_OPENAI_API_KEY,
-            api_version=API_VERSION,
-            azure_endpoint=AZURE_OPENAI_ENDPOINT,
-        )
-        try:
-            response = client.chat.completions.create(
-                model=AZURE_OPENAI_DEPLOYMENT,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert dog breed classifier. You will be provided with a hand-drawn image of a dog. Your task is to analyze the drawing and identify the most likely dog breed based on the visual characteristics shown in the drawing. Consider features like size, body shape, ear shape, coat type, and any distinctive breed-specific traits visible in the drawing. Provide your best guess for the dog breed."
-                    },
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": "What dog breed is in this drawing?"},
-                            {"type": "image_url", "image_url": {"url": data_url}}
-                        ]
-                    }
-                ],
-                max_tokens=100
+        # Show thinking indicator
+        with st.spinner("🤔 Analyzing your drawing and talking to Azure OpenAI..."):
+            img = cv2.cvtColor(canvas_result.image_data.astype(np.uint8), cv2.COLOR_RGBA2RGB)
+            _, buf = cv2.imencode('.png', img)
+            img_bytes = buf.tobytes()
+            img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+            data_url = f"data:image/png;base64,{img_base64}"
+            
+            client = AzureOpenAI(
+                api_key=AZURE_OPENAI_API_KEY,
+                api_version=API_VERSION,
+                azure_endpoint=AZURE_OPENAI_ENDPOINT,
             )
-            breed = response.choices[0].message.content
-            st.success(f"Azure OpenAI guesses: {breed}")
-            if st.session_state["draw_start_time"] and (time.time() - st.session_state["draw_start_time"] <= st.session_state["draw_time_limit"]):
-                st.info("You guessed within the time limit!")
-            else:
-                st.warning("You ran out of time!")
-        except Exception as e:
-            st.error(f"Error: {e}")
-            st.write("Check your endpoint, deployment name, API key, and model configuration.")
+            try:
+                response = client.chat.completions.create(
+                    model=AZURE_OPENAI_DEPLOYMENT,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": "You are an expert dog breed classifier. You will be provided with a hand-drawn image of a dog. Your task is to analyze the drawing and identify the most likely dog breed based on the visual characteristics shown in the drawing. Consider features like size, body shape, ear shape, coat type, and any distinctive breed-specific traits visible in the drawing. Provide your best guess for the dog breed."
+                        },
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": "What dog breed is in this drawing?"},
+                                {"type": "image_url", "image_url": {"url": data_url}}
+                            ]
+                        }
+                    ],
+                    max_tokens=100
+                )
+                breed = response.choices[0].message.content
+                st.success(f"Azure OpenAI guesses: {breed}")
+                if st.session_state["draw_start_time"] and (time.time() - st.session_state["draw_start_time"] <= st.session_state["draw_time_limit"]):
+                    st.info("You guessed within the time limit!")
+                else:
+                    st.warning("You ran out of time!")
+            except Exception as e:
+                st.error(f"Error: {e}")
+                st.write("Check your endpoint, deployment name, API key, and model configuration.")
     else:
         st.warning("Please draw a dog before guessing!")
