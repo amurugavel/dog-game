@@ -70,6 +70,10 @@ if st.button("Guess Breed"):
                 model=AZURE_OPENAI_DEPLOYMENT,
                 messages=[
                     {
+                        "role": "system",
+                        "content": "You are an expert dog breed classifier. You will be provided with a hand-drawn image of a dog. Your task is to analyze the drawing and identify the most likely dog breed based on the visual characteristics shown in the drawing. Consider features like size, body shape, ear shape, coat type, and any distinctive breed-specific traits visible in the drawing. Provide your best guess for the dog breed."
+                    },
+                    {
                         "role": "user",
                         "content": [
                             {"type": "text", "text": "What dog breed is in this drawing?"},
